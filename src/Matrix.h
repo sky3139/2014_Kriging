@@ -30,27 +30,27 @@ public:
 	void ZeroAll() throw();
 	void Clean() throw();
 	TMatrix& operator=(const TMatrix& rhs) throw();
-	void operator+=(const TMatrix& rhs) throw(MatrixException);
-	void operator-=(const TMatrix& rhs) throw(MatrixException);
-	void PriorityAdd(const TMatrix& rhs) throw(MatrixException);
+	void operator+=(const TMatrix& rhs) ;
+	void operator-=(const TMatrix& rhs) ;
+	void PriorityAdd(const TMatrix& rhs) ;
 	// inline access functions
-	T& operator[](int nIndex) throw(MatrixException);
-	T operator[](int nIndex) const throw(MatrixException);
-	T& operator()(int nRow, int nCol) throw(MatrixException);
-	T operator()(int nRow, int nCol) const throw(MatrixException);
+	T& operator[](int nIndex) ;
+	T operator[](int nIndex) const ;
+	T& operator()(int nRow, int nCol) ;
+	T operator()(int nRow, int nCol) const ;
 	// getter
-	int GetWidth() const throw() { return m_nWidth; }
-	int GetHeight() const throw() { return m_nHeight; }
+	int GetWidth()  { return m_nWidth; }
+	int GetHeight()  { return m_nHeight; }
 	// uitilies
-	T* GetRow(int nIndex) throw(MatrixException);
+	T* GetRow(int nIndex) ;
 	T* GetArray() throw();
-	bool IsSameDimension(const TMatrix& rhs) const throw();
-	void MakeSameDimension(TMatrix& output) const throw(MatrixException);
+	bool IsSameDimension(const TMatrix& rhs) ;
+	void MakeSameDimension(TMatrix& output) const ;
 	// virtual functions
-	virtual void Load(std::string filename) throw(MatrixException) { throw MatrixException(_T("Not Implemented")); }
-	virtual void Save(std::string filename) const throw(MatrixException) { throw MatrixException(_T("Not Implemented")); }
+	virtual void Load(std::string filename)  { throw MatrixException(("Not Implemented")); }
+	virtual void Save(std::string filename) const  { throw MatrixException(("Not Implemented")); }
 #ifdef _DEBUG
-	virtual void Dump(std::ostream& os) const throw();
+	virtual void Dump(std::ostream& os) ;
 #endif
 protected:
 	T* m_arByte;
@@ -59,12 +59,12 @@ protected:
 };
 
 template<class T>
-inline T& TMatrix<T>::operator[](int nIndex) throw(MatrixException)
+inline T& TMatrix<T>::operator[](int nIndex) 
 {
 #ifdef _DEBUG
 	if(nIndex < 0 || nIndex >= m_nWidth * m_nHeight) {
 		TCHAR buffer[MAX_PATH];
-		::sprintf(buffer, _T("Index out of bound : %d"), nIndex);
+		::sprintf(buffer, ("Index out of bound : %d"), nIndex);
 		throw MatrixException(buffer);
 	}
 #endif
@@ -72,22 +72,22 @@ inline T& TMatrix<T>::operator[](int nIndex) throw(MatrixException)
 }
 
 template<class T>
-inline T TMatrix<T>::operator[](int nIndex) const throw(MatrixException)
+inline T TMatrix<T>::operator[](int nIndex) const 
 {
 #ifdef _DEBUG
 	if(nIndex < 0 || nIndex >= m_nWidth * m_nHeight)
-		throw MatrixException(_T("Index out of bound const []"));
+		throw MatrixException(("Index out of bound const []"));
 #endif
 	return m_arByte[nIndex];
 }
 
 template<class T>
-inline T& TMatrix<T>::operator()(int nRow, int nCol) throw(MatrixException)
+inline T& TMatrix<T>::operator()(int nRow, int nCol) 
 {
 #ifdef _DEBUG
 	if(nCol <0 || nCol >= m_nWidth || nRow < 0 || nRow >= m_nHeight) {
 		TCHAR buffer[MAX_PATH];
-		::sprintf(buffer, _T("Index out of bound : row %d, col %d"), nRow, nCol);
+		::sprintf(buffer, ("Index out of bound : row %d, col %d"), nRow, nCol);
 		throw MatrixException(buffer);
 	}
 #endif
@@ -95,12 +95,12 @@ inline T& TMatrix<T>::operator()(int nRow, int nCol) throw(MatrixException)
 }
 
 template<class T>
-inline T TMatrix<T>::operator()(int nRow, int nCol) const throw(MatrixException)
+inline T TMatrix<T>::operator()(int nRow, int nCol) const 
 {
 #ifdef _DEBUG
 	if(nCol <0 || nCol >= m_nWidth || nRow < 0 || nRow >= m_nHeight) {
 		TCHAR buffer[MAX_PATH];
-		::sprintf(buffer, _T("Index out of bound : row %d, col %d"), nRow, nCol);
+		::sprintf(buffer, ("Index out of bound : row %d, col %d"), nRow, nCol);
 		throw MatrixException(buffer);
 	}
 #endif
@@ -189,10 +189,10 @@ TMatrix<T>& TMatrix<T>::operator=(const TMatrix<T>& rhs) throw()
 }
 
 template<class T>
-void TMatrix<T>::operator+=(const TMatrix<T>& rhs) throw(MatrixException)
+void TMatrix<T>::operator+=(const TMatrix<T>& rhs) 
 {
 	if(m_nWidth != rhs.GetWidth() || m_nHeight != rhs.GetHeight())
-		throw MatrixException(_T("Different dimension in argument") + LOCATION);
+		throw MatrixException(("Different dimension in argument") + LOCATION);
 
 	int nTotalByte = m_nWidth * m_nHeight;
 	for(int i=0; i<nTotalByte; i++) {
@@ -203,10 +203,10 @@ void TMatrix<T>::operator+=(const TMatrix<T>& rhs) throw(MatrixException)
 }
 
 template<class T>
-void TMatrix<T>::operator-=(const TMatrix<T>& rhs) throw(MatrixException)
+void TMatrix<T>::operator-=(const TMatrix<T>& rhs) 
 {
 	if(m_nWidth != rhs.GetWidth() || m_nHeight != rhs.GetHeight())
-		throw MatrixException(_T("Different dimension in argument") + LOCATION);
+		throw MatrixException(("Different dimension in argument") + LOCATION);
 
 	int nTotalByte = m_nWidth * m_nHeight;
 	for(int i=0; i<nTotalByte; i++) {
@@ -217,10 +217,10 @@ void TMatrix<T>::operator-=(const TMatrix<T>& rhs) throw(MatrixException)
 }
 
 template<class T>
-void TMatrix<T>::PriorityAdd(const TMatrix<T>& rhs) throw(MatrixException)
+void TMatrix<T>::PriorityAdd(const TMatrix<T>& rhs) 
 {
 	if(m_nWidth != rhs.GetWidth() || m_nHeight != rhs.GetHeight())
-		throw MatrixException(_T("Different dimension in argument") + LOCATION);
+		throw MatrixException(("Different dimension in argument") + LOCATION);
 
 	int nTotalByte = m_nWidth * m_nHeight;
 	for(int i=0; i<nTotalByte; i++)
@@ -228,10 +228,10 @@ void TMatrix<T>::PriorityAdd(const TMatrix<T>& rhs) throw(MatrixException)
 }
 
 template<class T>
-T* TMatrix<T>::GetRow(int nIndex) throw(MatrixException)
+T* TMatrix<T>::GetRow(int nIndex) 
 {
 	if(nIndex < 0 || nIndex >= m_nHeight)
-		throw MatrixException(_T("Not existing row index") + LOCATION);
+		throw MatrixException(("Not existing row index") + LOCATION);
 
 	T* pByte = m_arByte;
 	pByte += m_nWidth * nIndex * sizeof(T);
@@ -245,7 +245,7 @@ T* TMatrix<T>::GetArray() throw()
 }
 
 template<class T>
-bool TMatrix<T>::IsSameDimension(const TMatrix& rhs) const throw()
+bool TMatrix<T>::IsSameDimension(const TMatrix& rhs) 
 {
 	if(m_nWidth == rhs.m_nWidth && m_nHeight == rhs.m_nHeight)
 		return true;
@@ -254,7 +254,7 @@ bool TMatrix<T>::IsSameDimension(const TMatrix& rhs) const throw()
 }
 
 template<class T>
-void TMatrix<T>::MakeSameDimension(TMatrix<T>& output) const throw()
+void TMatrix<T>::MakeSameDimension(TMatrix<T>& output) const
 {
 	if(output.m_nHeight != m_nHeight || output.m_nWidth != m_nWidth) {
 		output.Clean();
@@ -267,7 +267,7 @@ void TMatrix<T>::MakeSameDimension(TMatrix<T>& output) const throw()
 
 #ifdef _DEBUG
 template<class T>
-void TMatrix<T>::Dump(std::ostream& os) const throw()
+void TMatrix<T>::Dump(std::ostream& os) 
 {
 	for(int i=0; i<m_nHeight; i++)
 		for(int j=0; j<m_nWidth; j++)

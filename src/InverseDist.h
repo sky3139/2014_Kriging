@@ -20,13 +20,12 @@ struct WeightAndZ
 	double z;
 };
 
-template<class ForwardIterator>
+template <class ForwardIterator>
 class TInverseDist : public TInterpolater<ForwardIterator>
 {
 public:
-	TInverseDist(double dRadius=200, double dExponent=8) throw() : m_dRadius(dRadius), m_dExponent(dExponent) {}
-	double GetInterpolatedZ(double xpos, double ypos, ForwardIterator first, ForwardIterator last) 
-	throw(InterpolaterException)
+	TInverseDist(double dRadius = 200, double dExponent = 8) throw() : m_dRadius(dRadius), m_dExponent(dExponent) {}
+	double GetInterpolatedZ(double xpos, double ypos, ForwardIterator first, ForwardIterator last)
 	{
 		// Check if Data is valid
 		assert(first != last);
@@ -37,12 +36,14 @@ public:
 
 		vector<WeightAndZ> vecWeight;
 		ForwardIterator start = first;
-		while(start != last) {
+		while (start != last)
+		{
 			distance = ::sqrt((::pow((xpos - (*start).x), 2) + ::pow((ypos - (*start).y), 2)));
-			if(distance == 0) // exact match
+			if (distance == 0) // exact match
 				return (*start).z;
 
-			if(distance > m_dRadius) {
+			if (distance > m_dRadius)
+			{
 				++start;
 				continue;
 			}
@@ -53,21 +54,23 @@ public:
 			totalWeight += weight;
 			++start;
 		}
-		for(int i=0; i<vecWeight.size(); i++)
+		for (int i = 0; i < vecWeight.size(); i++)
 			vecWeight[i].weight /= totalWeight;
 
 		double nodeValue = 0;
-		for(i=0; i<vecWeight.size(); i++) {
+		for (int i = 0; i < vecWeight.size(); i++)
+		{
 			nodeValue += vecWeight[i].weight * vecWeight[i].z;
 			++first;
 		}
 		return nodeValue;
 	}
+
 private:
 	double m_dRadius;
 	double m_dExponent;
 };
 
-typedef TInverseDist<Point3D*> InverseDist;
+typedef TInverseDist<Point3D *> InverseDist;
 
 #endif // !defined(AFX_INVERSEDIST_H__BB8C4FFF_A66C_4669_8B04_7D3080F5066A__INCLUDED_)

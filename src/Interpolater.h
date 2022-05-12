@@ -28,8 +28,7 @@ class TInterpolater
 {
 public:
 	virtual ~TInterpolater() {}
-	virtual double GetInterpolatedZ(double xpos, double ypos, ForwardIterator first, ForwardIterator last) 
-		throw(InterpolaterException) = 0;
+	virtual double GetInterpolatedZ(double xpos, double ypos, ForwardIterator first, ForwardIterator last)=0 ;
 };
 
 typedef TInterpolater<Point3D*> Interpolater;
