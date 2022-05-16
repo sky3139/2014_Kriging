@@ -14,14 +14,24 @@
 #include "Interpolater.h"
 using namespace std;
 
-class InputReader  
+class InputReader
 {
 public:
 	InputReader() throw() {}
 	InputReader(string filename) throw() { Read(filename); }
 	void Read(string filename) throw();
-	const vector<Point3D>& Get3DPoints() const throw() { return m_vecPoints; }
-	void Dump(ostream& os) const throw();
+	const vector<Point3D> &Get3DPoints() const throw() { return m_vecPoints; }
+	void Dump(ostream &os) const throw();
+
+	void print()
+	{
+		for (int i = 0; i < m_vecPoints.size(); i++)
+		{
+			// cout << i << " " << m_vecPoints[i].x << " " << m_vecPoints[i].y << " " << m_vecPoints[i].z << endl;
+			cout << m_vecPoints[i].x << " " << m_vecPoints[i].y << " " << m_vecPoints[i].z << endl;
+		}
+	}
+
 private:
 	vector<Point3D> m_vecPoints;
 };

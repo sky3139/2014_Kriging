@@ -40,7 +40,6 @@ class TInverseDist : public TInterpolater<ForwardIterator>
 public:
 	cv::flann::GenericIndex<cv::flann::L2<float>> *kdtree; // = cv::flann::GenericIndex<cv::flann::L2<float>>(cv::Mat(pts).reshape(1), cvflann::KDTreeIndexParams{2});
 	vector<Point2f> pts;
-	vector<float> zs;
 	// 在半径m_dRadius的球内的点插值 m_dExponent 幂   W=1/(d^m)
 	TInverseDist(ForwardIterator first, ForwardIterator last, float dRadius = 200, float dExponent = 8) throw() : m_dRadius(dRadius), m_dExponent(dExponent)
 	{
@@ -49,7 +48,6 @@ public:
 		while (start != last)
 		{
 			pts.emplace_back((*start).x, (*start).y);
-			zs.push_back((*start).z);
 			++start;
 		}
 		kdtree = new cv::flann::GenericIndex<cv::flann::L2<float>>(cv::Mat(pts).reshape(1), cvflann::KDTreeIndexParams{2});
@@ -78,9 +76,12 @@ public:
 			}
 			weight = 1 / ::pow(distance, m_dExponent);
 			vecWeight.push_back(WeightAndZ(weight, (*start).z));
+			// cout << (*start).x << " " << (*start).y << " " << distance << " " << weight << endl;
+
 			totalWeight += weight;
 			++start;
 		}
+		// cout << "totalWeight" << totalWeight << "   " << vecWeight.size() << endl;
 		for (int i = 0; i < vecWeight.size(); i++)
 			vecWeight[i].weight /= totalWeight;
 
@@ -90,6 +91,8 @@ public:
 			nodeValue += vecWeight[i].weight * vecWeight[i].z;
 			++first;
 		}
+		// cout << (*start).x << " " << (*start).y << " " << distance << " " << nodeValue << endl;
+
 		return nodeValue;
 	}
 	float lastz = 0.0f;
@@ -107,7 +110,8 @@ public:
 		vector<float> dists(K, -1);
 		// kdtree->knnSearch({xpos, ypos}, indices, dists, K, cvflann::SearchParams{});
 		cvflann::SearchParams sp(0x7fff, 0, false);
-		kdtree->radiusSearch({xpos, ypos}, indices, dists, m_dRadius * m_dRadius, sp);
+		kdtree->radiusSearch({xpos, ypos}, indices, dists, m_dRadius*m_dRadius, sp);
+
 		// cout << "->查询点坐标为：" << searchPoint << "\n";
 		for (int i = 0; i < indices.size(); i++)
 		{
@@ -115,19 +119,26 @@ public:
 				break;
 			auto pt = pts[indices[i]];
 
-			distance = dists[i]; //::sqrt(dists[i]);
-			// cout << pt.x << " " << pt.y << " " << 0<< "\n"; ///<< " " <<  0<< " id=" << indices[i] << endl;
+			distance = ::sqrt(dists[i]);
+			// cout << pt << " " << distance << " " <<  << " id=" << indices[i] << endl;
+
 			if (distance == 0) // exact match
-				return zs[indices[i]];
+				return (*start).z;
+
 			if (distance > m_dRadius)
+			{
+				++start;
 				continue;
+			}
 			// cout <<pt << " " << distance  << endl;
-			weight = 1.0f / ::pow(distance, m_dExponent / 2);
-			vecWeight.push_back(WeightAndZ(weight, zs[indices[i]]));
+			// 0.4 0.1 0.364005 56.9598
+			weight = 1.0f / ::pow(distance, m_dExponent);
+			vecWeight.push_back(WeightAndZ(weight, (*start).z));
 			totalWeight += weight;
 			++start;
 		}
-		// cout << totalWeight << "   " << vecWeight.size() << endl;
+
+		cout << totalWeight << "   " << vecWeight.size() << endl;
 		// assert(0);
 		for (int i = 0; i < vecWeight.size(); i++)
 			vecWeight[i].weight /= totalWeight;
@@ -136,6 +147,7 @@ public:
 		for (int i = 0; i < vecWeight.size(); i++)
 		{
 			nodeValue += vecWeight[i].weight * vecWeight[i].z;
+			++first;
 		}
 		return nodeValue;
 	}

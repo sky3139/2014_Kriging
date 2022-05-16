@@ -23,15 +23,15 @@ public:
 	InterpolaterException(string message, string location) throw() : BaseException(message, location) {}
 };
 
-template<class ForwardIterator>
+template <class ForwardIterator>
 class TInterpolater
 {
 public:
 	virtual ~TInterpolater() {}
-	virtual double GetInterpolatedZ(double xpos, double ypos, ForwardIterator first, ForwardIterator last)=0 ;
+	virtual float GetInterpolatedZ(float xpos, float ypos, ForwardIterator first, ForwardIterator last) = 0;
+	virtual float GetInterpolatedZ2(float xpos, float ypos, ForwardIterator first, ForwardIterator last) { return -1.0f; };
 };
 
-typedef TInterpolater<Point3D*> Interpolater;
-
+typedef TInterpolater<Point3D *> Interpolater;
 
 #endif // !defined(AFX_INTERPOLATER_H__D0C4FC82_70D0_461D_8D5D_A5718F4D75DF__INCLUDED_)

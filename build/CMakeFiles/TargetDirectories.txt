@@ -1,3 +1,0 @@
-/home/u20/2014_Kriging/build/CMakeFiles/rebuild_cache.dir
-/home/u20/2014_Kriging/build/CMakeFiles/edit_cache.dir
-/home/u20/2014_Kriging/build/CMakeFiles/filter.dir

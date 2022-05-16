@@ -17,15 +17,13 @@ using namespace std;
 // typedef double Point2D[2];
 // typedef Point2D Rectangle[2];
 
-static Point2D origin = {0, 0};
+static Point2D origin(0,0);// = {0, 0};
 static Point2D test_point2 = {5, 5};
 static Point2D test_point3 = {-5, 5};
 static Point2D test_point4 = {-5, -5};
 static Point2D test_point5 = {5, -5};
 static Rectangle plane;
-// void init(){
-//     origin
-// }
+
 static void test_empty_quadtree()
 {
     PRQuadtree *q = new PRQuadtree(plane);
@@ -38,34 +36,25 @@ static void test_singleton_quadtree()
 {
     PRQuadtree *q = new PRQuadtree(plane);
     // insert up to three and check invaiants at each step
-    // assert(-1 == q->prquadtree_height());
-    // q->prquadtree_add(origin);
-    // assert(0 == q->prquadtree_height());
-    // assert(1 == q->prquadtree_size());
-    // q->prquadtree_add(test_point2);
-    // assert(0 == q->prquadtree_height());
-    // assert(2 == q->prquadtree_size());
-    // q->prquadtree_add(test_point3);
-    // assert(0 == q->prquadtree_height());
-    // assert(3 == q->prquadtree_size());
-    // q->prquadtree_add(test_point4);
-    // assert(0 == q->prquadtree_height());
-    // assert(4 == q->prquadtree_size());
-    static Point2D t3 = {0, 0.3};
-    for (int i = 0; i < 10; i++)
-    {
-        t3[0]=i+0.5;
-        t3[1]=i-0.5;
-        q->prquadtree_add(t3);
-    }
+    assert(-1 == q->prquadtree_height());
+    q->prquadtree_add(origin);
+    assert(0 == q->prquadtree_height());
+    assert(1 == q->prquadtree_size());
+    q->prquadtree_add(test_point2);
+    assert(0 == q->prquadtree_height());
+    assert(2 == q->prquadtree_size());
+    q->prquadtree_add(test_point3);
+    assert(0 == q->prquadtree_height());
+    assert(3 == q->prquadtree_size());
+    q->prquadtree_add(test_point4);
+    assert(0 == q->prquadtree_height());
+    assert(4 == q->prquadtree_size());
 
-    q->root->print();
-    q->root->contents->children[2]->print();
-    // assert(q->prquadtree_search(t3) == true);
-    // assert(q->prquadtree_search(test_point2) == true);
-    // assert(q->prquadtree_search(test_point3) == true);
-    // assert(q->prquadtree_search(test_point4) == true);
-    // assert(q->prquadtree_search(test_point5) == false);
+    assert(q->prquadtree_search(origin) == true);
+    assert(q->prquadtree_search(test_point2) == true);
+    assert(q->prquadtree_search(test_point3) == true);
+    assert(q->prquadtree_search(test_point4) == true);
+    assert(q->prquadtree_search(test_point5) == false);
 
     delete q;
 }
@@ -173,14 +162,15 @@ void infinite_rectangle(Rectangle rect)
 }
 int main()
 {
+    point2d_eq_ctx.eq = eq_p_casted;
     point2d_eq_ctx.ctx = &point2d_dims;
 
     infinite_rectangle(plane);
-    // test_empty_quadtree();
+    test_empty_quadtree();
     test_singleton_quadtree();
-    //     test_single_split_quadtree();
-    //     test_repeated_split();
-    //     test_removal();
+    test_single_split_quadtree();
+    test_repeated_split();
+    test_removal();
 };
 
 //

@@ -30,7 +30,7 @@ struct TPoint3D
 	T z;
 };
 
-typedef TPoint3D<double> Point3D;
+typedef TPoint3D<float> Point3D;
 
 inline bool Point3DCompare(const Point3D& pt1, const Point3D& pt2)
 {
