@@ -15,24 +15,24 @@
 
 struct WeightAndZ
 {
-	WeightAndZ(double w, double zz) : weight(w), z(zz) {}
-	double weight;
-	double z;
+	WeightAndZ(float w, float zz) : weight(w), z(zz) {}
+	float weight;
+	float z;
 };
 
 template <class ForwardIterator>
 class TInverseDist : public TInterpolater<ForwardIterator>
 {
 public:
-	TInverseDist(double dRadius = 200, double dExponent = 8) throw() : m_dRadius(dRadius), m_dExponent(dExponent) {}
-	double GetInterpolatedZ(double xpos, double ypos, ForwardIterator first, ForwardIterator last)
+	TInverseDist(float dRadius = 200, float dExponent = 8) throw() : m_dRadius(dRadius), m_dExponent(dExponent) {}
+	float GetInterpolatedZ(float xpos, float ypos, ForwardIterator first, ForwardIterator last)
 	{
 		// Check if Data is valid
 		assert(first != last);
 
-		double distance = 0;
-		double weight = 0;
-		double totalWeight = 0;
+		float distance = 0;
+		float weight = 0;
+		float totalWeight = 0;
 
 		vector<WeightAndZ> vecWeight;
 		ForwardIterator start = first;
@@ -57,7 +57,7 @@ public:
 		for (int i = 0; i < vecWeight.size(); i++)
 			vecWeight[i].weight /= totalWeight;
 
-		double nodeValue = 0;
+		float nodeValue = 0;
 		for (int i = 0; i < vecWeight.size(); i++)
 		{
 			nodeValue += vecWeight[i].weight * vecWeight[i].z;
@@ -67,8 +67,8 @@ public:
 	}
 
 private:
-	double m_dRadius;
-	double m_dExponent;
+	float m_dRadius;
+	float m_dExponent;
 };
 
 typedef TInverseDist<Point3D *> InverseDist;
